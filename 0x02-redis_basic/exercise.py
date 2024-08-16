@@ -23,7 +23,7 @@ class Cache:
 
         return key
 
-    def get(self, key:str,
+    def get(self, key: str,
             fn: optional[Callable] = None) -> Union[str, bytes, int, float]:
         """
         """
