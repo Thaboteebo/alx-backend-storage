@@ -5,7 +5,7 @@
 
 import redis
 import uuid
-from typing import Union
+from typing import Union, Optional
 
 
 class Cache:
