@@ -23,6 +23,31 @@ def count_calls(method: Callable) -> Callable:
 
     return wrapper
 
+def call_history(method: Callable) -> Callable:
+    """
+    call_history function
+    """
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs): #soucery skip: avoid-builtin-shadow
+        """
+        wrapper function
+        """
+        base_key = method.__qualname__
+        inputs_key = f"{base_key}:inputs"
+        outputs_key = f"{base_key}:outputs"
+
+        input_data = str (args)
+        self._redis.rpush(inputs_key, input_data)
+
+        output = method(self, *args, **kwargs)
+
+        output_data = str(output)
+        self._redis.rpush(outputs_key, output_data)
+
+        return output
+
+    return wrapper
+
 class Cache:
     def __init__(self, host='localhost', port=6379, db=0):
         """
@@ -30,6 +55,9 @@ class Cache:
         self._redis = redis.Redis(host=host, port=port, db=db)
         self._redis.flushdb()
 
+
+    @call_history
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
 
