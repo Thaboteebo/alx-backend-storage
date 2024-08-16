@@ -7,6 +7,7 @@ import redis
 import uuid
 from typing import Union
 
+
 class Cache:
     def __init__(self, host='localhost', port=6379, db=0):
         """
@@ -24,7 +25,7 @@ class Cache:
         return key
 
     def get(self, key: str,
-            fn: optional[Callable] = None) -> Union[str, bytes, int, float]:
+            fn: Optional[Callable] = None) -> Union[str, bytes, int, float]:
         """
         """
         data = self._redis.get(key)
