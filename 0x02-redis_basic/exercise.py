@@ -22,3 +22,35 @@ class Cache:
         self._redis.set(key, data)
 
         return key
+
+    def get(self, key:str,
+            fn: optional[Callable] = None) -> Union[str, bytes, int, float]:
+        """
+        """
+        data = self._redis.get(key)
+
+        if data is None:
+            return data
+
+        if fn:
+            callable_fn = fn(data)
+            return callable_fn
+        else:
+            return data
+
+    def get_str(self, key: str) -> str:
+        """
+        """
+        value = self._redis.get(key, fn=lambda d: d.decode("utf-8"))
+        return value
+
+    def get_int(self, key: str) -> int:
+        """
+        """
+        value = self._redis.get(key)
+        try:
+            value = int(value.decode("utf-8"))
+        except Exception:
+            return None
+
+        return value
